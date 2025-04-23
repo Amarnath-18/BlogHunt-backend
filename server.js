@@ -11,45 +11,23 @@ import fileUpload from "express-fileupload";
 dotenv.config();
 const app = express();
 
-// app.use(cors({
-//   origin: "https://blog-hunt-frontend.vercel.app",
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: [
-//     "Origin", 
-//     "X-Requested-With", 
-//     "Content-Type", 
-//     "Accept", 
-//     "Authorization"
-//   ]
-// }));
-
-
-
-const allowedOrigins = ['http://localhost:52342', "https://blog-hunt-frontend.vercel.app"];
+const allowedOrigins = ['http://localhost:3000', 'https://blog-hunt-frontend.vercel.app'];
 
 app.use(cors({
-    origin: (origin , callback) => {
-        // Allow If no origin paresent like mobile or postman
-        if(!origin) return callback(null , true);
-        if(origin){
-            if(allowedOrigins.includes(origin)){
-                return callback(null , true);
-            }else {
-                return callback(new Error("Not allowed by CORS"));
-            }
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+            return callback(new Error('CORS policy violation'), false);
         }
-    }
-    , credentials: true , 
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", // Include OPTIONS
-    allowedHeaders: "Content-Type,Authorization,Accept", // Ensure you include all necessary headers
-    allowedHeaders : (req, callback) => {
-    callback(null, req.headers['access-control-request-headers' , "access-control-allow-origin"])
-    } , 
-    optionsSuccessStatus: 204, // For legacy browsers
-})), 
-
-
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    exposedHeaders: ['set-cookie']
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -60,10 +38,11 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/upload", uploadRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Api is Running..");
+    res.send("Api is Running..");
 });
+
 connectDB();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
+    console.log(`server is running on port ${PORT}`);
 });
