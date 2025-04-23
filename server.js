@@ -12,8 +12,16 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "https://blog-hunt-frontend.vercel.app",  // Replace with your actual client URL
-  credentials: true
+  origin: "https://blog-hunt-frontend.vercel.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Origin", 
+    "X-Requested-With", 
+    "Content-Type", 
+    "Accept", 
+    "Authorization"
+  ]
 }));
 
 app.use(express.json());
