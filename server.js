@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "https://blog-hunt-frontend.vercel.app/",  // Replace with your actual client URL
+  origin: "https://blog-hunt-frontend.vercel.app",  // Replace with your actual client URL
   credentials: true
 }));
 
