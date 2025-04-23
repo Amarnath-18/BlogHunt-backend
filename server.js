@@ -11,18 +11,41 @@ import fileUpload from "express-fileupload";
 dotenv.config();
 const app = express();
 
+// app.use(cors({
+//   origin: "https://blog-hunt-frontend.vercel.app",
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: [
+//     "Origin", 
+//     "X-Requested-With", 
+//     "Content-Type", 
+//     "Accept", 
+//     "Authorization"
+//   ]
+// }));
+
+const allowedOrigins = ['http://localhost:52342', "https://blog-hunt-frontend.vercel.app"];
+
 app.use(cors({
-  origin: "https://blog-hunt-frontend.vercel.app",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "Origin", 
-    "X-Requested-With", 
-    "Content-Type", 
-    "Accept", 
-    "Authorization"
-  ]
-}));
+    origin: (origin , callback) => {
+        // Allow If no origin paresent like mobile or postman
+        if(!origin) return callback(null , true);
+        if(origin){
+            if(allowedOrigins.includes(origin)){
+                return callback(null , true);
+            }else {
+                return callback(new Error("Not allowed by CORS"));
+            }
+        }
+    }
+    , credentials: true , 
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", // Include OPTIONS
+    allowedHeaders: "Content-Type,Authorization,Accept", // Ensure you include all necessary headers
+    // allowedHeaders : (req, callback) => {
+    // callback(null, req.headers['access-control-request-headers'])
+    // } , 
+    optionsSuccessStatus: 204, // For legacy browsers
+})), 
 
 app.use(express.json());
 app.use(cookieParser());
