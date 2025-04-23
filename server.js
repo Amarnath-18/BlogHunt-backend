@@ -44,10 +44,12 @@ app.use(cors({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", // Include OPTIONS
     allowedHeaders: "Content-Type,Authorization,Accept", // Ensure you include all necessary headers
     allowedHeaders : (req, callback) => {
-    callback(null, req.headers['access-control-request-headers'])
+    callback(null, req.headers['access-control-request-headers' , "access-control-allow-origin"])
     } , 
     optionsSuccessStatus: 204, // For legacy browsers
 })), 
+
+
 
 app.use(express.json());
 app.use(cookieParser());
