@@ -24,6 +24,8 @@ const app = express();
 //   ]
 // }));
 
+
+
 const allowedOrigins = ['http://localhost:52342', "https://blog-hunt-frontend.vercel.app"];
 
 app.use(cors({
@@ -41,9 +43,9 @@ app.use(cors({
     , credentials: true , 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS", // Include OPTIONS
     allowedHeaders: "Content-Type,Authorization,Accept", // Ensure you include all necessary headers
-    // allowedHeaders : (req, callback) => {
-    // callback(null, req.headers['access-control-request-headers'])
-    // } , 
+    allowedHeaders : (req, callback) => {
+    callback(null, req.headers['access-control-request-headers'])
+    } , 
     optionsSuccessStatus: 204, // For legacy browsers
 })), 
 
