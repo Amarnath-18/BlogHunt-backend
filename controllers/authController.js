@@ -98,21 +98,27 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
+    // First attempt to clear with production settings
     res.clearCookie("token", {
-      httpOnly: true, // manipulation form server
-      secure: false, // false for http req
-      sameSite: "Lax",
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/"
     });
 
+    // Also clear with basic settings as fallback
+    res.clearCookie("token");
+
     res.status(200).json({
-      success:true,
-      message:"logOut successfull"
-    })
+      success: true,
+      message: "Logout successful"
+    });
   } catch (error) {
+    console.error("Logout error:", error);
     res.status(500).json({
-      success:false,
-      message:"logout unsuccessfull",
-    })
+      success: false,
+      message: "Logout unsuccessful"
+    });
   }
 };
 
