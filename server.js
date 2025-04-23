@@ -11,14 +11,10 @@ import fileUpload from "express-fileupload";
 dotenv.config();
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Your frontend URL
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
-);
+app.use(cors({
+  origin: "https://blog-hunt-frontend.vercel.app/",  // Replace with your actual client URL
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser());
