@@ -11,27 +11,38 @@ import fileUpload from "express-fileupload";
 dotenv.config();
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', 'https://blog-hunt-frontend.vercel.app'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://blog-hunt-frontend.vercel.app'
+];
 
+// CORS configuration
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        
-        if (allowedOrigins.indexOf(origin) === -1) {
-            return callback(new Error('CORS policy violation'), false);
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
         }
-        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-    exposedHeaders: ['set-cookie']
 }));
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload({ useTempFiles: true }));
+
+// Set secure cookie options
+app.use((req, res, next) => {
+    res.cookie('cookieName', 'cookieValue', {
+        secure: true,
+        sameSite: 'none',
+        domain: '.onrender.com' // Adjust if your domain is different
+    });
+    next();
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
