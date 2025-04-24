@@ -14,7 +14,7 @@ const blogSchema = new mongoose.Schema(
       required: true,
       trim: true,
       minlength: 5,
-      maxlength: 1000,
+      maxlength: 10000,
     },
     image: {
       type: String,
